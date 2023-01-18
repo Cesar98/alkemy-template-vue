@@ -16,8 +16,14 @@
                                 @csrf
 
                                 <div class="form-outline form-black mb-4">
-                                    <input type="email" id="email" name="email" class="form-control form-control-lg" />
+                                    <input type="email" id="email" name="email" class="form-control form-control-lg @error('email') is-invalid @enderror" />
                                     <label class="form-label" for="email">Email</label>
+
+                                    @error('email')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
