@@ -25,3 +25,4 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users');
 Route::post('/user_create', [App\Http\Controllers\UserController::class, 'store'])->name('user_create');
 Route::put('/user_edit/{userId}', [App\Http\Controllers\UserController::class, 'update'])->name('user_edit');
+Route::delete('/user_delete/{userId}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user_delete');

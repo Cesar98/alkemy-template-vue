@@ -19,6 +19,7 @@
     "dependencies": {
         "datatables.net-bs4": "^1.13.1",
         "datatables.net-buttons-bs4": "^2.3.3",
+        "moment": "^2.29.4",
         "sweetalert": "^2.1.2"
     }
 }

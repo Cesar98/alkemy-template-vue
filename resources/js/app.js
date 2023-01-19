@@ -8,7 +8,6 @@ import './bootstrap';
 import 'datatables.net-bs4';
 import 'datatables.net-buttons-bs4';
 import 'datatables.net-buttons/js/buttons.colVis.js';
-import swal from 'sweetalert';
 
 import { createApp } from 'vue';
 
