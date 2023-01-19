@@ -1,66 +1,233 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Querys
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+1. Delete users with 25 years old
 
-## About Laravel
+```sql
+DELETE FROM Users 
+WHERE 'age' = 25;
+```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+```php
+$users = Users::where('age', 25)->get();
+foreach($users as $user){
+	$user->delete();
+}
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2. Show users that were born between 1998 and 2000
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```sql
+SELECT name, birthday 
+WHERE (birthday BETWEEN '1998/01/01' AND '2000/12/31');
 
-## Learning Laravel
+SELECT name, birthday
+WHERE birthday >= '1998/01/01' 
+AND birthday <= '2000/12/31';
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```php
+$users = Users::whereBetween('birthday', ['1998/01/01', '2000/12/31'])->get();
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+$users = Users::where('birthday', '>=', '1998/01/01')
+								->where('birthday', '<=', '2000/12/31')->get();
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Show the total of tickets that each user has
 
-## Laravel Sponsors
+```sql
+SELECT name, last_name, COUNT(user_tickets.user_id) as tickets_per_person
+FROM Users
+LEFT JOIN user_tickets
+	ON Users.id = user_tickets.user_id
+GROUP BY Users.id;
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```php
+//Users model
 
-### Premium Partners
+public function tickets()
+{
+    return $this->hasMany(USER_TICKETS::class);
+}
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+//controller
 
-## Contributing
+$users = Users::withCount('tickets')->get(); 
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Show the total of tickets of each user, and order the query result from the biggest to the smallest number of tickets
 
-## Code of Conduct
+```sql
+SELECT name, last_name, COUNT(user_tickets.user_id) as tickets_per_person
+FROM Users
+LEFT JOIN user_tickets
+	ON Users.id = user_tickets.user_id
+GROUP BY Users.id
+ORDER BY tickets_per_person DESC;
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```php
+//Users model
 
-## Security Vulnerabilities
+public function tickets()
+{
+    return $this->hasMany(USER_TICKETS::class);
+}
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+//controller
 
-## License
+$users = Users::withCount('tickets')->get();
+$users->orderBy('tickets', 'desc'); 
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Show the total of tickets of all users
+
+```sql
+SELECT COUNT(user_id) as tickets_total 
+FROM user_tickets
+```
+
+```php
+$tickets_total = USER_TICKETS::count();
+```
+
+## POO
+
+```php
+
+class Persona{
+	public function genre(){
+		print('Genre');
+	}
+}
+
+class Alumno extends Persona {
+	protected $name;
+	//protected $genre;
+	protected $age;
+	protected $birthday;
+
+	public function __construct($name, /*$genre*/, $age, $birthday){
+		$this->name = $name;
+		//$this->genre = $genre;
+		$this->age = $age;
+		$this->birthday = $birthday;
+	}
+
+	public function getName(){
+		return $this->name;
+	}
+	public function setName($name){
+		return $this->name = $name;
+	}
+
+/*
+	public function getGenre(){
+		return $this->genre;
+	}
+	public function setGenre($genre){
+		return $this->genre = $genre;
+	}
+*/
+
+	public function getAge(){
+		return $this->age;
+	}
+	public function setAge($age){
+		return $this->age = $age;
+	}
+
+	public function getBirthday(){
+		return $this->birthday;
+	}
+	public function setBirthday($birthday){
+		return $this->birthday = $birthday;
+	}
+}
+
+```
+
+## Project instructions
+
+Needed requirements for installation
+
+Latest Composer version
+Laravel 9
+Latest node version
+XAMPP installed with PHP 8.0 or better
+
+Visual Studio Code editor installed
+
+1. Copy HTTPS URL from the GitHub project
+
+2. Open a terminal or cmd tool in the htdocs carpet of your XAMPP installation
+
+3. Clone the project, running the next command on the terminal
+
+```
+git clone https://github.com/Cesar98/alkemy-template-vue.git alkemy-template-vue
+```
+
+4. Open the project with VS Code and open the integrated terminal
+
+5. Copy the .env.example file to a .env file (Nice to have in mind that you have to be in the root carpet project) with the next command
+
+```
+cp .env.example .env
+```
+
+6. Open PhpMyAdmin on Google Chrome, and create a new database with the name alkemy-template-vue (same name as the project)
+
+7. Edit the .env file created, change APP_NAME to Alkemy Vue, and DB_DATABASE to alkemy-template-vue (If in the last step you created the database with user and a password, then you have to put the user and password with the one that you created it).
+
+8. Go back to the integrated terminal of VS Code, and type the next command, this will install all necessary libraries that the project uses to work.
+
+```
+composer install
+```
+
+9. If the last command fails to run, then run
+
+```
+composer update
+```
+
+10. if both command fails to run, then check the PHP version in your computer (It might be the version of PHP).
+
+11. In the same terminal run the next command, this will be installing all node packages and dependencies that the project uses.
+
+```
+npm install
+```
+
+12. Then run the next command, this will be creating a key to the project, this is for git purposes (All Laravel project needs this key, and cloning the project via GitHub it needs to run this command)
+
+```
+php artisan key:generate
+```
+
+13. In this next step, you are about to fill out the database (I use the Laravel User migration and create a new seeder for testing purposes)
+
+```
+php artisan migrate --seed
+```
+
+14. This is a tricky step because you have to open 2 integrated terminals on VS Code or 2 terminals out of the project, both ways you have to be on the root carpet of the project. Then run these two command lines one in one terminal. (Copy the URL that PHP artisan serve command provides, it will be useful for the next step)
+
+```
+php artisan serve
+```
+
+```
+npm run dev
+```
+
+16. To navigate in the site, open the URL copied and open it in Google Chrome.
+17. I provide an Admin user and different users created by the same framework to start navigating, just log in with the admin user.
+
+```
+email: admin@gmail.com
+password: 1234567890
+```
+
+18. Navigate on the site, if you want to log in to a new user, first you have to edit the password of the user indeed, and then log in with the edited user
