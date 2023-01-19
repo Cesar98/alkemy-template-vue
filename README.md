@@ -28,8 +28,7 @@ AND birthday <= '2000/12/31';
 ```php
 $users = Users::whereBetween('birthday', ['1998/01/01', '2000/12/31'])->get();
 
-$users = Users::where('birthday', '>=', '1998/01/01')
-								->where('birthday', '<=', '2000/12/31')->get();
+$users = Users::where('birthday', '>=', '1998/01/01')->where('birthday', '<=', '2000/12/31')->get();
 ```
 
 1. Show the total of tickets that each user has
