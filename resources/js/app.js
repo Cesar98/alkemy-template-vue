@@ -5,6 +5,11 @@
  */
 
 import './bootstrap';
+import 'datatables.net-bs4';
+import 'datatables.net-buttons-bs4';
+import 'datatables.net-buttons/js/buttons.colVis.js';
+import swal from 'sweetalert';
+
 import { createApp } from 'vue';
 
 /**
@@ -15,8 +20,8 @@ import { createApp } from 'vue';
 
 const app = createApp({});
 
-import ExampleComponent from './components/ExampleComponent.vue';
-app.component('example-component', ExampleComponent);
+import UserComponent from './components/UserComponent.vue';
+app.component('user-component', UserComponent);
 
 /**
  * The following block of code may be used to automatically register your

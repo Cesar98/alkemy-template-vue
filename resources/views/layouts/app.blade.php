@@ -13,9 +13,12 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
 
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/atlantis.min.css') }}">
@@ -41,9 +44,10 @@ background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 64%
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-
-                        @auth
+                        <li>
+                            @auth
+                                <a style="color: white"> {{ Auth::user()->name }}
+                                </a>
                                 <a href="{{ route('logout') }}" style="color: white"
                                     onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
@@ -53,13 +57,15 @@ background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 64%
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
-                        @endauth
+                            @endauth
+                        </li>
+
                     </ul>
                 </div>
             </div>
         </nav>
 
-        <main class="py-5">
+        <main>
             @yield('content')
         </main>
     </div>
