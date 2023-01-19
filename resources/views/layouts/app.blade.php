@@ -46,7 +46,7 @@ background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 64%
                     <ul class="navbar-nav ms-auto">
                         <li>
                             @auth
-                                <a style="color: white"> {{ Auth::user()->name }}
+                                <a style="color: white"> {{ Auth::user()->name }} /
                                 </a>
                                 <a href="{{ route('logout') }}" style="color: white"
                                     onclick="event.preventDefault();

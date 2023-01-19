@@ -5,8 +5,8 @@
             background: radial-gradient(circle,rgba(213,133,255,1) 0%, rgba(0,212,255,1) 100%);">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Users list</h4>
-                        <button class="btn btn-icon btn-round btn-secondary ml-auto" tooltip="Create new user" data-bs-toggle="modal"
+                        <h2 class="card-title">Users list</h2>
+                        <button class="btn btn-icon btn-round btn-secondary ml-auto" data-bs-toggle="modal"
                             data-bs-target="#modalUser" @click="openCreateModal">
                             <i class="fas fa-user-plus"></i>
                         </button>
@@ -14,8 +14,9 @@
                         <div class="modal fade" id="modalUser" tabindex="-1" aria-labelledby="modalUserLabel"
                             aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content" style="background: rgb(94,230,232);
-background: radial-gradient(circle, rgba(94,230,232,1) 0%, rgba(236,212,158,1) 84%, rgba(196,192,192,1) 100%);">
+                                <div class="modal-content"
+                                    style="background: rgb(94,230,232);
+                                    background: radial-gradient(circle, rgba(94,230,232,1) 0%, rgba(236,212,158,1) 84%, rgba(196,192,192,1) 100%);">
                                     <div class="modal-header">
                                         <h1 class="modal-title fs-5" id="modalUserLabel">{{ title }}</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -25,21 +26,24 @@ background: radial-gradient(circle, rgba(94,230,232,1) 0%, rgba(236,212,158,1) 8
 
                                         <form>
                                             <div class="form-outline form-black mb-4" align="center">
+                                                <label class="form-label" for="name">Name</label>
+
                                                 <input type="text" id="name" name="name" v-model="userData.name"
                                                     class="form-control form-control-lg" />
-                                                <label class="form-label" for="name">Name</label>
                                             </div>
 
                                             <div class="form-outline form-black mb-4" align="center">
+                                                <label class="form-label" for="email">Email</label>
+
                                                 <input type="email" id="email" name="email" v-model="userData.email"
                                                     class="form-control form-control-leg" />
-                                                <label class="form-label" for="email">Email</label>
                                             </div>
 
                                             <div class="form-outline form-white mb-4" align="center">
+                                                <label class="form-label" for="password">Password</label>
+
                                                 <input type="password" id="password" name="password"
                                                     v-model="userData.password" class="form-control form-control-lg" />
-                                                <label class="form-label" for="password">Password</label>
                                             </div>
                                         </form>
 
@@ -160,7 +164,11 @@ export default {
         },
         editUser() {
             axios.put('user_edit/' + this.userId, this.userData).then(response => {
-                swal('Success!', 'User edited perfectly.', 'success');
+                if (response.data != '') {
+                    swal('Error!', 'Impossible to edit the logged user.', 'error');
+                } else {
+                    swal('Success!', 'User edited perfectly.', 'success');
+                }
                 $('#modalUser').modal('hide');
                 this.getUsers();
             }).catch(function (error) {
@@ -179,7 +187,11 @@ export default {
                 .then((willDelete) => {
                     if (willDelete) {
                         axios.delete('user_delete/' + user.id).then(response => {
-                            swal('Success!', 'User deleted permanently.', 'success');
+                            if (response.data != '') {
+                                swal('Error!', 'Impossible to delete the logged user.', 'error');
+                            } else {
+                                swal('Success!', 'User  deleted permanently.', 'success');
+                            }
                             this.getUsers();
                         }).catch(function (error) {
                             let array = Object.values(error.response.data.errors);
